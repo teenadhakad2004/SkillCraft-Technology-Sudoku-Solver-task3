@@ -3,91 +3,151 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SkillCraft Internship - Task 3: Sudoku Solver</title>
+  <title>SkillCraft Task 3 - Sudoku Solver</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #1e1e2f;
-      color: #ffffff;
-      margin: 0;
-      padding: 20px;
+      color: white;
       text-align: center;
+      padding: 20px;
     }
     h1 {
       color: #4CAF50;
     }
-    h2 {
-      color: #ff9800;
+    table {
+      border-collapse: collapse;
+      margin: 20px auto;
     }
-    .container {
+    td {
+      border: 1px solid #888;
+      width: 40px;
+      height: 40px;
+      text-align: center;
+    }
+    input {
+      width: 38px;
+      height: 38px;
+      text-align: center;
+      font-size: 16px;
       background: #2e2e42;
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 800px;
-      margin: auto;
-      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      color: white;
+      border: none;
     }
-    pre {
-      background: #111;
-      color: #0f0;
-      text-align: left;
-      padding: 15px;
-      border-radius: 8px;
-      overflow-x: auto;
+    .btn {
+      background: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
     }
-    a {
-      color: cyan;
-      font-weight: bold;
-      text-decoration: none;
-    }
-    .footer {
-      margin-top: 20px;
-      font-size: 14px;
-      color: #bbb;
+    .btn:hover {
+      background: #45a049;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>SkillCraft Internship</h1>
-    <h2>Task 3 - Sudoku Solver</h2>
-    <p>
-      In this task, I created a <b>Sudoku Solver</b> using <b>Python</b>.<br>
-      It uses a <b>Backtracking Algorithm</b> to fill empty cells (represented as <code>0</code>) and find the valid solution.
-    </p>
+  <h1>SkillCraft Internship - Task 3</h1>
+  <h2>Sudoku Solver</h2>
+  <p>Fill the Sudoku board and click <b>Solve</b> to see the solution.</p>
 
-    <h3>📌 Features:</h3>
-    <ul style="text-align: left; display: inline-block;">
-      <li>Solves any valid 9x9 Sudoku puzzle</li>
-      <li>Uses Backtracking Algorithm</li>
-      <li>Input: Unsolved Sudoku (0 = empty cell)</li>
-      <li>Output: Solved Sudoku Grid</li>
-    </ul>
+  <table id="sudoku-board"></table>
 
-    <h3>🖥️ Example Code:</h3>
-    <pre>
-def solve_sudoku(grid):
-    for row in range(9):
-        for col in range(9):
-            if grid[row][col] == 0:
-                for num in range(1, 10):
-                    if is_safe(grid, row, col, num):
-                        grid[row][col] = num
-                        if solve_sudoku(grid):
-                            return True
-                        grid[row][col] = 0
-                return False
-    return True
-    </pre>
+  <button class="btn" onclick="solveSudoku()">Solve</button>
+  <button class="btn" onclick="clearBoard()">Clear</button>
 
-    <p>
-      👉 Full code available here:  
-      <a href="sudoku_solver.py" target="_blank">Download sudoku_solver.py</a>
-    </p>
-  </div>
+  <script>
+    const boardSize = 9;
 
-  <div class="footer">
-    © 2025 Kavita Rathore | SkillCraft Internship
-  </div>
+    // Create Sudoku board dynamically
+    const table = document.getElementById("sudoku-board");
+    for (let i = 0; i < boardSize; i++) {
+      let row = table.insertRow();
+      for (let j = 0; j < boardSize; j++) {
+        let cell = row.insertCell();
+        let input = document.createElement("input");
+        input.type = "text";
+        input.maxLength = 1;
+        cell.appendChild(input);
+      }
+    }
+
+    // Get board values
+    function getBoard() {
+      let grid = [];
+      for (let i = 0; i < boardSize; i++) {
+        grid[i] = [];
+        for (let j = 0; j < boardSize; j++) {
+          let val = table.rows[i].cells[j].children[0].value;
+          grid[i][j] = val ? parseInt(val) : 0;
+        }
+      }
+      return grid;
+    }
+
+    // Set board values
+    function setBoard(grid) {
+      for (let i = 0; i < boardSize; i++) {
+        for (let j = 0; j < boardSize; j++) {
+          table.rows[i].cells[j].children[0].value =
+            grid[i][j] !== 0 ? grid[i][j] : "";
+        }
+      }
+    }
+
+    // Sudoku solver functions
+    function isSafe(grid, row, col, num) {
+      for (let x = 0; x < 9; x++) {
+        if (grid[row][x] === num || grid[x][col] === num) return false;
+      }
+      let startRow = row - (row % 3);
+      let startCol = col - (col % 3);
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          if (grid[startRow + i][startCol + j] === num) return false;
+        }
+      }
+      return true;
+    }
+
+    function solve(grid) {
+      for (let row = 0; row < 9; row++) {
+        for (let col = 0; col < 9; col++) {
+          if (grid[row][col] === 0) {
+            for (let num = 1; num <= 9; num++) {
+              if (isSafe(grid, row, col, num)) {
+                grid[row][col] = num;
+                if (solve(grid)) return true;
+                grid[row][col] = 0;
+              }
+            }
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    function solveSudoku() {
+      let grid = getBoard();
+      if (solve(grid)) {
+        setBoard(grid);
+        alert("Solved Successfully!");
+      } else {
+        alert("No solution exists!");
+      }
+    }
+
+    function clearBoard() {
+      for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+          table.rows[i].cells[j].children[0].value = "";
+        }
+      }
+    }
+  </script>
 </body>
 </html>
