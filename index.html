@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillCraft Internship - Task 3: Sudoku Solver</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1e1e2f;
+      color: #ffffff;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      color: #4CAF50;
+    }
+    h2 {
+      color: #ff9800;
+    }
+    .container {
+      background: #2e2e42;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 800px;
+      margin: auto;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    }
+    pre {
+      background: #111;
+      color: #0f0;
+      text-align: left;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+    a {
+      color: cyan;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .footer {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #bbb;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>SkillCraft Internship</h1>
+    <h2>Task 3 - Sudoku Solver</h2>
+    <p>
+      In this task, I created a <b>Sudoku Solver</b> using <b>Python</b>.<br>
+      It uses a <b>Backtracking Algorithm</b> to fill empty cells (represented as <code>0</code>) and find the valid solution.
+    </p>
+
+    <h3>📌 Features:</h3>
+    <ul style="text-align: left; display: inline-block;">
+      <li>Solves any valid 9x9 Sudoku puzzle</li>
+      <li>Uses Backtracking Algorithm</li>
+      <li>Input: Unsolved Sudoku (0 = empty cell)</li>
+      <li>Output: Solved Sudoku Grid</li>
+    </ul>
+
+    <h3>🖥️ Example Code:</h3>
+    <pre>
+def solve_sudoku(grid):
+    for row in range(9):
+        for col in range(9):
+            if grid[row][col] == 0:
+                for num in range(1, 10):
+                    if is_safe(grid, row, col, num):
+                        grid[row][col] = num
+                        if solve_sudoku(grid):
+                            return True
+                        grid[row][col] = 0
+                return False
+    return True
+    </pre>
+
+    <p>
+      👉 Full code available here:  
+      <a href="sudoku_solver.py" target="_blank">Download sudoku_solver.py</a>
+    </p>
+  </div>
+
+  <div class="footer">
+    © 2025 Kavita Rathore | SkillCraft Internship
+  </div>
+</body>
+</html>
